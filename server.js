@@ -7,7 +7,7 @@ fastify.register(require('@fastify/static'), {
   prefix: '/',
 });
 
-// 設定 HTTP 路由（如果需要，可以顯示首頁）
+// 設定 HTTP 路由
 fastify.get('/', async (request, reply) => {
   return { hello: 'world' };
 });
@@ -31,9 +31,18 @@ const start = async () => {
     wss.on('connection', (ws) => {
       console.log('New client connected!');
 
+      // 每秒發送一次訊息
       const interval = setInterval(() => {
         ws.send('Hello from the server!');
       }, 1000);
+
+      // 10 秒後自動關閉連線
+      const timeout = setTimeout(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send('Connection will be closed after 10 seconds.');
+          ws.close(1000, '10秒後自動關閉連線');
+        }
+      }, 10000);
 
       ws.on('message', (message) => {
         console.log(`Received: ${message}`);
