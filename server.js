@@ -15,7 +15,7 @@ fastify.get('/', async (request, reply) => {
 // 啟動 HTTP 伺服器
 const start = async () => {
   try {
-    fastify.listen({ port: process.env.PORT || 3000, host: '0.0.0.0' })
+    fastify.listen({ port: process.env.PORT || 8080, host: '0.0.0.0' })
       .then((address) => {
         console.log(`Server listening on ${address}`);
       })
