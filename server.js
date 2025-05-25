@@ -44,6 +44,19 @@ const start = async () => {
         }
       }, 10000);
 
+      // 定期發送 ping
+      const pingInterval = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.ping();
+          console.log('Ping sent');
+        }
+      }, 30000);
+
+      // 當收到 Client 端的 pong 時
+      ws.on('pong', () => {
+        console.log('Pong received');
+      });
+
       ws.on('message', (message) => {
         console.log(`Received: ${message}`);
         ws.send(`You sent: ${message}`);
@@ -51,6 +64,8 @@ const start = async () => {
 
       ws.on('close', () => {
         clearInterval(interval);
+        clearInterval(pingInterval);
+        clearTimeout(timeout);
         console.log('Client has disconnected.');
       });
     });
