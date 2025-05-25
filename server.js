@@ -37,12 +37,12 @@ const start = async () => {
       }, 1000);
 
       // 10 秒後自動關閉連線
-      // const timeout = setTimeout(() => {
-      //   if (ws.readyState === WebSocket.OPEN) {
-      //     ws.send('Connection will be closed after 10 seconds.');
-      //     ws.close(1000, '10秒後自動關閉連線');
-      //   }
-      // }, 10000);
+      const timeout = setTimeout(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send('Connection will be closed after 10 seconds.');
+          ws.close(1000, '10秒後自動關閉連線');
+        }
+      }, 10000);
 
       // 定期發送 ping
       const pingInterval = setInterval(() => {
@@ -50,7 +50,7 @@ const start = async () => {
           ws.ping();
           console.log('Ping sent');
         }
-      }, 30000);
+      }, 5000);
 
       // 當收到 Client 端的 pong 時
       ws.on('pong', () => {
@@ -65,7 +65,7 @@ const start = async () => {
       ws.on('close', () => {
         clearInterval(interval);
         clearInterval(pingInterval);
-        // clearTimeout(timeout);
+        clearTimeout(timeout);
         console.log('Client has disconnected.');
       });
     });
